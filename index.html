@@ -41,6 +41,49 @@
             opacity: 0.9;
         }
         
+        .metadata {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .metadata-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #764ba2;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .metadata-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .metadata-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        
+        .metadata-value {
+            font-size: 1.1em;
+            color: #333;
+        }
+        
         .pattern-card {
             background: white;
             border-radius: 12px;
@@ -116,6 +159,12 @@
             margin-top: 50px;
             opacity: 0.8;
         }
+        
+        @media (max-width: 768px) {
+            .metadata-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -125,6 +174,21 @@
             <p>Pattern Factory Test Data | Medical Device Cybersecurity</p>
         </header>
 
+        <div class="metadata">
+            <div class="metadata-title">Source Attribution</div>
+            <div class="metadata-grid">
+                <div class="metadata-item">
+                    <div class="metadata-label">Organization</div>
+                    <div class="metadata-value">Pattern Factory</div>
+                </div>
+                <div class="metadata-item">
+                    <div class="metadata-label">Source</div>
+                    <div class="metadata-value">Security Analyst</div>
+                </div>
+            </div>
+        </div>
+<h1> Organization: Pattern factory <h1>
+<h1> Source/Guest: Pattern factory Security analyst <h1>
         <div class="pattern-card">
             <h2 class="pattern-name">Assuming Non-Networked Devices Don't Have Security Vulnerabilities</h2>
             
