@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedTech Security Anti-Patterns | Pattern Factory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .pattern-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .pattern-name {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            color: #764ba2;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .section-content {
+            color: #555;
+            font-size: 1.05em;
+        }
+        
+        .contexts, .signals {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .contexts li, .signals li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+        }
+        
+        .contexts li:before, .signals li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .impact-high {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .impact-critical {
+            color: #c0392b;
+            font-weight: 700;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MedTech Security Anti-Patterns</h1>
+            <p>Pattern Factory Test Data | Medical Device Cybersecurity</p>
+        </header>
+
+        <div class="pattern-card">
+            <h2 class="pattern-name">Assuming Non-Networked Devices Don't Have Security Vulnerabilities</h2>
+            
+            <div class="section">
+                <div class="section-title">Description</div>
+                <div class="section-content">
+                    Teams treat devices without network connectivity as inherently secure, ignoring physical access vectors, local interfaces (USB, Bluetooth), supply chain attacks, and firmware vulnerabilities. The absence of network connectivity creates a false sense of security that exempts the device from security review processes.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Common Contexts</div>
+                <ul class="contexts">
+                    <li>Implantable devices with local wireless interfaces (programmer communication)</li>
+                    <li>Standalone diagnostic equipment in clinical labs</li>
+                    <li>Legacy devices being "air-gapped" as a security control</li>
+                    <li>Battery-powered wearables with Bluetooth-only connectivity</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Typical Impact</div>
+                <div class="section-content impact-critical">
+                    CRITICAL: Device recalls, FDA enforcement actions, patient safety incidents. Physical access exploits can result in device manipulation, unauthorized firmware modification, or data exfiltration through side channels. Supply chain compromises remain undetected until deployment.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Early Signals</div>
+                <ul class="signals">
+                    <li>Security requirements document excludes "standalone" devices from threat modeling</li>
+                    <li>USB ports and diagnostic interfaces have no authentication or encryption</li>
+                    <li>Firmware update process relies solely on physical possession as security control</li>
+                    <li>No security testing budget allocated for non-networked product lines</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Why Teams Miss This</div>
+                <div class="section-content">
+                    Network security dominates the mental model of "cybersecurity" - teams trained on IT security naturally focus on network perimeter defenses. Non-networked devices don't trigger standard security review workflows. Physical security feels like a facilities problem, not an engineering problem. FDA guidance historically focused on networked medical devices, creating regulatory blind spots.
+                </div>
+            </div>
+        </div>
+
+        <div class="pattern-card">
+            <h2 class="pattern-name">Treating SBOM Generation as a Compliance Checkbox</h2>
+            
+            <div class="section">
+                <div class="section-title">Description</div>
+                <div class="section-content">
+                    Organizations generate Software Bill of Materials (SBOM) documents to satisfy regulatory requirements without integrating SBOM data into vulnerability management, procurement decisions, or incident response workflows. The SBOM exists as a static artifact that is never queried, updated, or actionable.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Common Contexts</div>
+                <ul class="contexts">
+                    <li>FDA premarket submissions requiring SBOM attachments</li>
+                    <li>Post-market surveillance programs with SBOM requirements</li>
+                    <li>Procurement contracts mandating SBOM delivery</li>
+                    <li>EU MDR technical documentation including software composition</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Typical Impact</div>
+                <div class="section-content impact-high">
+                    HIGH: Delayed response to zero-day vulnerabilities (Log4Shell, Heartbleed), inability to identify affected products during security incidents, missed vulnerability disclosures from component vendors. Organizations discover critical vulnerabilities in deployed devices weeks or months after public disclosure.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Early Signals</div>
+                <ul class="signals">
+                    <li>SBOM is generated once during regulatory submission and never updated</li>
+                    <li>No automated tooling to query SBOM against vulnerability databases</li>
+                    <li>Security team cannot answer "which products use OpenSSL 1.1.1?" within 24 hours</li>
+                    <li>SBOM generation is owned by regulatory affairs, not engineering or security</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Why Teams Miss This</div>
+                <div class="section-content">
+                    SBOM requirements are framed as regulatory documentation rather than operational security tools. Organizations lack mature vulnerability management processes that could consume SBOM data. The gap between "compliance artifact" and "security tool" isn't obvious until a major incident occurs. Tooling investments focus on SBOM generation, not SBOM operationalization.
+                </div>
+            </div>
+        </div>
+
+        <div class="pattern-card">
+            <h2 class="pattern-name">Deferring Cryptographic Agility Until Post-Market</h2>
+            
+            <div class="section">
+                <div class="section-title">Description</div>
+                <div class="section-content">
+                    Teams hardcode cryptographic algorithms, key lengths, and protocols into firmware/software without abstraction layers or update mechanisms, assuming cryptographic standards will remain secure throughout the 10-15 year device lifecycle. When quantum computing or cryptanalytic breakthroughs invalidate current algorithms, devices cannot be upgraded.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Common Contexts</div>
+                <ul class="contexts">
+                    <li>Implantable devices with 10+ year operational lifespans</li>
+                    <li>Resource-constrained embedded systems optimizing for performance</li>
+                    <li>Legacy products undergoing line extensions without architecture refresh</li>
+                    <li>Devices using proprietary communication protocols with baked-in crypto</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Typical Impact</div>
+                <div class="section-content impact-critical">
+                    CRITICAL: Cryptographic obsolescence creates unfixable vulnerabilities in deployed device fleets. NIST transitions (SHA-1 deprecation, post-quantum migration) render devices unable to communicate with updated infrastructure. Surgical removal of implantables becomes the only remediation option. Regulatory submissions frozen due to cryptographic non-compliance.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Early Signals</div>
+                <ul class="signals">
+                    <li>Cryptographic primitives called directly in application code without abstraction</li>
+                    <li>Firmware update mechanism cannot modify cryptographic libraries</li>
+                    <li>Security architecture review doesn't address crypto agility or algorithm transitions</li>
+                    <li>Hardware crypto accelerators lock device into specific algorithms</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Why Teams Miss This</div>
+                <div class="section-content">
+                    Cryptographic transitions happen on decade timescales that exceed product planning horizons. Embedded teams optimize for current performance/memory constraints rather than future flexibility. NIST guidance on crypto agility is abstract and doesn't map to embedded development practices. Security architects focus on current threat landscape, not 15-year forward projections. Regulatory submissions lock down algorithms, discouraging post-market changes.
+                </div>
+            </div>
+        </div>
+
+        <div class="pattern-card">
+            <h2 class="pattern-name">Assuming Cloud Provider Security Controls Are Sufficient for PHI</h2>
+            
+            <div class="section">
+                <div class="section-title">Description</div>
+                <div class="section-content">
+                    Teams rely exclusively on AWS/Azure/GCP platform-level security controls (IAM, encryption at rest, compliance certifications) without implementing application-layer protections specific to protected health information. The shared responsibility model is misunderstood - organizations assume HIPAA compliance is inherited from cloud provider rather than constructed at the application layer.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Common Contexts</div>
+                <ul class="contexts">
+                    <li>SaMD (Software as Medical Device) platforms migrating from on-premise to cloud</li>
+                    <li>Clinical trial data management systems built on cloud infrastructure</li>
+                    <li>Remote patient monitoring applications with consumer-facing portals</li>
+                    <li>AI/ML model training pipelines processing de-identified datasets</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Typical Impact</div>
+                <div class="section-content impact-high">
+                    HIGH: HIPAA breach notifications, OCR enforcement actions, patient data exposure. Misconfigured S3 buckets expose PHI. Inadequate access controls allow unauthorized cross-tenant data access. Logging/monitoring gaps prevent breach detection. Application-layer vulnerabilities (SQL injection, broken authentication) bypass platform security.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Early Signals</div>
+                <ul class="signals">
+                    <li>Security architecture diagram shows only AWS/Azure security services, no application controls</li>
+                    <li>BAA (Business Associate Agreement) with cloud provider treated as completion of HIPAA compliance</li>
+                    <li>No application-layer encryption for PHI beyond platform default encryption</li>
+                    <li>Security team cannot articulate which controls are organization's responsibility vs. provider's</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Why Teams Miss This</div>
+                <div class="section-content">
+                    Cloud provider marketing emphasizes compliance certifications, creating perception of inherited security. Development teams lack healthcare-specific security expertise - they know cloud infrastructure but not HIPAA requirements. Shared responsibility model is conceptually simple but operationally complex to implement. Application security feels redundant when platform security is "enterprise-grade". Security-by-default cloud configurations create false confidence.
+                </div>
+            </div>
+        </div>
+
+        <div class="pattern-card">
+            <h2 class="pattern-name">Testing Cybersecurity Requirements Only in Staging Environments</h2>
+            
+            <div class="section">
+                <div class="section-title">Description</div>
+                <div class="section-content">
+                    Security testing (penetration testing, vulnerability scanning, fuzzing) occurs exclusively in pre-production environments that differ significantly from production configurations. Production-specific attack surfaces (third-party integrations, enterprise network configurations, multi-tenancy boundaries) remain untested until post-market deployment. The assumption is that staging environment security testing is representative of production security posture.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Common Contexts</div>
+                <ul class="contexts">
+                    <li>Hospital network deployments with site-specific firewall rules and VLANs</li>
+                    <li>Cloud-based platforms with customer-specific SSO integrations</li>
+                    <li>Devices with field-configurable network interfaces and protocols</li>
+                    <li>Systems integrating with EHR/PACS/laboratory information systems via HL7/FHIR</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Typical Impact</div>
+                <div class="section-content impact-high">
+                    HIGH: Post-market security vulnerabilities discovered by hospitals during deployment, installation delays, emergency security patches in production, customer security audit failures. Production-specific attack vectors (misconfigured integration points, unanticipated network exposure) create exploitable vulnerabilities that staging testing never revealed.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Early Signals</div>
+                <ul class="signals">
+                    <li>Security test plans explicitly exclude production systems due to patient safety concerns</li>
+                    <li>Staging environment uses simplified network topology without customer integration points</li>
+                    <li>No security validation process during installation qualification (IQ/OQ/PQ)</li>
+                    <li>Customer-reported security issues consistently involve features not present in staging</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Why Teams Miss This</div>
+                <div class="section-content">
+                    Patient safety concerns legitimately constrain testing in production medical device environments. Staging environments are intentionally simplified to enable controlled testing - this simplification removes attack surfaces. The configuration space of production deployments (hospital networks, customer-specific integrations) is too large to fully replicate in staging. Security testing is time-boxed and scoped to core functionality, not edge cases. Regulatory validation focuses on intended use, not adversarial scenarios.
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Pattern Factory | MedTech Security Intelligence | Test Dataset 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
